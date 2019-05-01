@@ -27,7 +27,7 @@ class Installer
     }
 
     public static function configDatabase(Event $event=null) {
-        $files = file(".env");
+        $files = file(".env", FILE_IGNORE_NEW_LINES);
         $lines = array_combine($files, $files);
         var_dump($lines);
         $io = $event->getIO();
@@ -77,10 +77,10 @@ class Installer
 
 
     public static function configBaseUrl(Event $event=null) {
-        $files = file(".env");
+        $files = file(".env", FILE_IGNORE_NEW_LINES);
         $lines = array_combine($files, $files);
 
-        $filesbin = file("bin/server.sh");
+        $filesbin = file("bin/server.sh", FILE_IGNORE_NEW_LINES);
         $linesbin = array_combine($filesbin, $filesbin);
 
         $io = $event->getIO();

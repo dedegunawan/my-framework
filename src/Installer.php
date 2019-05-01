@@ -141,6 +141,7 @@ class Installer
         $io = self::getEvent()->getIO();
         $io->write('==================================================');
         $io->write("Konfigurasi Database");
+        $error = true;
 
         do {
             $hostname = self::askRequired("Hostname = ");
@@ -153,7 +154,10 @@ class Installer
             self::$password = $password;
             self::$database = $database;
 
-        } while(!self::checkConnection() && $io->write("Konfigurasi Database Salah, silahkan isi kembali"));
+            $error = !self::checkConnection();
+            if ($error) $io->write("Konfigurasi Database Salah, silahkan isi kembali");
+
+        } while($error);
 
         $lines["DATABASE_HOSTNAME=your_hostname"]= "DATABASE_HOSTNAME=$hostname";
         $lines["DATABASE_DATABASE=your_database"]= "DATABASE_DATABASE=$database";

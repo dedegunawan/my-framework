@@ -116,18 +116,24 @@ class Installer
     }
 
     public static function postInstall(Event $event=null) {
-        passthru('clear');
-        self::setEvent($event);
 
+        self::setEvent($event);
+        self::header();
         self::clearEnv();
 
         self::configDatabase();
         self::installIonAuth();
+        self::header();
         self::configBaseUrl();
-
+        self::header();
         self::successMessage();
 
         self::deleteSelf();
+    }
+
+    public static function header() {
+        passthru('clear');
+        self::getEvent()->getIO()->write("Instalasi Framework my-framework");
     }
 
     public static function clearEnv() {
@@ -257,6 +263,7 @@ class Installer
     public static function successMessage(Event $event=null) {
         $io = self::getEvent()->getIO();
         $io->write('Install Success');
+        $io->write('Silahkan jalankan web server menggunakan perintah : `./bin/server.sh`');
         $io->write('==================================================');
     }
 

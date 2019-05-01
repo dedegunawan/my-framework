@@ -17,7 +17,7 @@ class Installer
     protected static $password;
     protected static $database;
     public static function postInstall(Event $event=null) {
-        file_exists('.env') || copy('.env.example', '.env');
+        file_exists('.env') || copy('.env-example', '.env');
         self::configDatabase($event);
         self::installIonAuth($event);
         self::configBaseUrl($event);

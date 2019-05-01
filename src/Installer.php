@@ -29,6 +29,7 @@ class Installer
     public static function configDatabase(Event $event=null) {
         $files = file(".env");
         $lines = array_combine($files, $files);
+        var_dump($lines);
         $io = $event->getIO();
         $io->write('==================================================');
         $io->write("Konfirgurasi Database");
@@ -46,6 +47,7 @@ class Installer
         $lines["DATABASE_DATABASE=your_database"]= "DATABASE_DATABASE=$database";
         $lines["DATABASE_USERNAME=your_username"]= "DATABASE_USERNAME=$username";
         $lines["DATABASE_PASSWORD=your_password"]= "DATABASE_PASSWORD=$password";
+        var_dump($lines);
 
         file_put_contents(".env", implode("", $lines));
         $io->write('==================================================');
@@ -56,7 +58,7 @@ class Installer
         $io = $event->getIO();
         $io->write('==================================================');
         $io->write("Check Database Connection");
-        $io->write(printf("Konfigurasi : %s | %s | %s | %s", self::$hostname, self::$username, self::$password, self::$database));
+        $io->write(printf("Konfigurasi : %s | %s | %s | %s\n", self::$hostname, self::$username, self::$password, self::$database));
 
         $mysqli = new \mysqli(self::$hostname, self::$username, self::$password, self::$database);
 

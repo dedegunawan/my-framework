@@ -49,7 +49,7 @@ class Installer
         $lines["DATABASE_PASSWORD=your_password"]= "DATABASE_PASSWORD=$password";
         var_dump($lines);
 
-        file_put_contents(".env", implode("", $lines));
+        file_put_contents(".env", implode("\n", $lines));
         $io->write('==================================================');
 
     }

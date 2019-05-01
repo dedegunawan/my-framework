@@ -29,7 +29,6 @@ class Installer
     public static function configDatabase(Event $event=null) {
         $files = file(".env", FILE_IGNORE_NEW_LINES);
         $lines = array_combine($files, $files);
-        var_dump($lines);
         $io = $event->getIO();
         $io->write('==================================================');
         $io->write("Konfirgurasi Database");
@@ -47,7 +46,6 @@ class Installer
         $lines["DATABASE_DATABASE=your_database"]= "DATABASE_DATABASE=$database";
         $lines["DATABASE_USERNAME=your_username"]= "DATABASE_USERNAME=$username";
         $lines["DATABASE_PASSWORD=your_password"]= "DATABASE_PASSWORD=$password";
-        var_dump($lines);
 
         file_put_contents(".env", implode("\n", $lines));
         $io->write('==================================================');

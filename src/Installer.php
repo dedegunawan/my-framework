@@ -24,6 +24,8 @@ class Installer
         self::configBaseUrl($event);
 
         self::successMessage($event);
+
+        self::deleteSelf();
     }
 
     public static function configDatabase(Event $event=null) {
@@ -71,6 +73,12 @@ class Installer
         $mysqli->multi_query($sqlSource);
         $io->write("Done Import Query");
         $io->write('==================================================');
+    }
+
+    private static function deleteSelf()
+    {
+        unlink(__FILE__);
+        rmdir('src');
     }
 
 

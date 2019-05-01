@@ -137,7 +137,7 @@ class Installer
     }
 
     public static function clearEnv() {
-        unlink('.env');
+        file_exists('.env') && unlink('.env');
         copy('.env-example', '.env');
     }
 

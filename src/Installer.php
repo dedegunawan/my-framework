@@ -177,13 +177,13 @@ class Installer
         try {
             $mysqli = new \mysqli(self::getHostname(), self::getUsername(), self::getPassword(), self::getDatabase());
         } catch (\Exception $exception) {
-            $io->write(printf("<error>Koneksi gagal: %s\n</error>", $exception->getMessage()));
+            $io->write(printf("<error>Error : %s\n</error>", $exception->getMessage()));
             $io->write('==================================================');
             return false;
         }
 
         if ($mysqli->connect_errno) {
-            $io->write(printf("<error>Koneksi gagal: %s\n</error>", $mysqli->connect_error));
+            $io->write(printf("<error>Error : %s\n</error>", $mysqli->connect_error));
             $io->write('==================================================');
             return false;
         }
@@ -198,6 +198,7 @@ class Installer
             return false;
         }
 
+        self::setMysqli($mysqli);
         return true;
     }
 

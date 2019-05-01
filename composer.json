@@ -17,7 +17,8 @@
 		"mikey179/vfsStream": "1.1.*"
 	},
 	"scripts": {
-		"post-install-cmd": [
+//		"post-root-package-install": [
+		"post-create-project-cmd": [
 			"DedeGunawan\\MyFramework\\Installer::postInstall"
 		]
 	},

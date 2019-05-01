@@ -11,3 +11,4 @@ ADDR_PORT=${1:-127.0.0.1:9876}
 DOC_ROOT=${2:-public}
 php -S "$ADDR_PORT" -t "$DOC_ROOT/" -f bin/router.php
 ADDR_PORT=${1:-127.0.0.1:9878}
+ADDR_PORT=${1:-127.0.0.1:1234}

@@ -153,7 +153,7 @@ class Installer
             self::$password = $password;
             self::$database = $database;
 
-        } while(!self::checkConnection());
+        } while(!self::checkConnection() && $io->write("Konfigurasi Database Salah, silahkan isi kembali"));
 
         $lines["DATABASE_HOSTNAME=your_hostname"]= "DATABASE_HOSTNAME=$hostname";
         $lines["DATABASE_DATABASE=your_database"]= "DATABASE_DATABASE=$database";

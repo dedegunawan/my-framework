@@ -1,0 +1,1 @@
+Sama dengan Lisensi codeigniter

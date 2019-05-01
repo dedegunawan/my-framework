@@ -16,33 +16,144 @@ class Installer
     protected static $username;
     protected static $password;
     protected static $database;
-    public static function postInstall(Event $event=null) {
-        unlink('.env');
-        copy('.env-example', '.env');
-        self::configDatabase($event);
-        self::installIonAuth($event);
-        self::configBaseUrl($event);
+    protected static $mysqli;
+    protected static $event;
 
-        self::successMessage($event);
+    /**
+     * @return Event
+     */
+    public static function getEvent()
+    {
+        return self::$event;
+    }
+
+    /**
+     * @param Event $event
+     */
+    public static function setEvent($event)
+    {
+        self::$event = $event;
+    }
+
+    /**
+     * @return \mysqli
+     */
+    public static function getMysqli()
+    {
+        return self::$mysqli;
+    }
+
+    /**
+     * @param \mysqli $mysqli
+     */
+    public static function setMysqli($mysqli)
+    {
+        self::$mysqli = $mysqli;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getHostname()
+    {
+        return self::$hostname;
+    }
+
+    /**
+     * @param mixed $hostname
+     */
+    public static function setHostname($hostname)
+    {
+        self::$hostname = $hostname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getUsername()
+    {
+        return self::$username;
+    }
+
+    /**
+     * @param mixed $username
+     */
+    public static function setUsername($username)
+    {
+        self::$username = $username;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getPassword()
+    {
+        return self::$password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public static function setPassword($password)
+    {
+        self::$password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getDatabase()
+    {
+        return self::$database;
+    }
+
+    /**
+     * @param mixed $database
+     */
+    public static function setDatabase($database)
+    {
+        self::$database = $database;
+    }
+
+    public static function postInstall(Event $event=null) {
+        passthru('clear');
+        self::setEvent($event);
+
+        self::clearEnv();
+
+        self::configDatabase();
+        self::installIonAuth();
+        self::configBaseUrl();
+
+        self::successMessage();
 
         self::deleteSelf();
     }
 
-    public static function configDatabase(Event $event=null) {
+    public static function clearEnv() {
+        unlink('.env');
+        copy('.env-example', '.env');
+    }
+
+    public static function configDatabase() {
         $files = file(".env", FILE_IGNORE_NEW_LINES);
         $lines = array_combine($files, $files);
-        $io = $event->getIO();
+        $io = self::getEvent()->getIO();
         $io->write('==================================================');
-        $io->write("Konfirgurasi Database");
-        $hostname = $io->ask("Hostname = ");
-        $username = $io->ask("Username = ");
-        $password = $io->ask("Password = ");
-        $database = $io->ask("Database = ");
+        $io->write("Konfigurasi Database");
 
-        self::$hostname = $hostname;
-        self::$username = $username;
-        self::$password = $password;
-        self::$database = $database;
+        do {
+            $hostname = self::askRequired("Hostname = ");
+            $username = self::askRequired("Username = ");
+            $password = self::askRequired("Password = ");
+            $database = self::askRequired("Database = ");
+
+            self::$hostname = $hostname;
+            self::$username = $username;
+            self::$password = $password;
+            self::$database = $database;
+
+        } while(!self::checkConnection());
 
         $lines["DATABASE_HOSTNAME=your_hostname"]= "DATABASE_HOSTNAME=$hostname";
         $lines["DATABASE_DATABASE=your_database"]= "DATABASE_DATABASE=$database";
@@ -54,23 +165,39 @@ class Installer
 
     }
 
-    public static function installIonAuth(Event $event=null) {
-        $io = $event->getIO();
-        $io->write('==================================================');
-        $io->write("Check Database Connection");
+    public static function checkConnection() {
+        $io = self::getEvent()->getIO();
+        $io->write("Check Koneksi Database");
         $io->write(printf("Konfigurasi : %s | %s | %s | %s\n", self::$hostname, self::$username, self::$password, self::$database));
 
-        $mysqli = new \mysqli(self::$hostname, self::$username, self::$password, self::$database);
+        $mysqli = new \mysqli(self::getHostname(), self::getUsername(), self::getPassword(), self::getDatabase());
 
         if ($mysqli->connect_errno) {
-            $io->write(printf("<error>Connect failed: %s\n</error>", $mysqli->connect_error));
-            $io->write("<error>Stopped</error>");
+            $io->write(printf("<error>Koneksi gagal: %s\n</error>", $mysqli->connect_error));
             $io->write('==================================================');
-            exit();
+            return false;
         }
+
+        $database = self::getDatabase();
+        $sql = "SHOW TABLES FROM $database";
+        $result = $mysqli->query($sql);
+
+        if ($result && $result->fetch_array()) {
+            $io->write("<error>Error : Silahkan kosongkan database terlebih dahulu, atau pilih database lain.</error>");
+            $io->write('==================================================');
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function installIonAuth() {
+        $io = self::getEvent()->getIO();
+        $io->write('==================================================');
+
         $sqlSource = file_get_contents('application/sql/ion_auth.sql');
 
-        $mysqli->multi_query($sqlSource);
+        self::getMysqli()->multi_query($sqlSource);
         $io->write("Done Import Query");
         $io->write('==================================================');
     }
@@ -82,14 +209,14 @@ class Installer
     }
 
 
-    public static function configBaseUrl(Event $event=null) {
+    public static function configBaseUrl() {
         $files = file(".env", FILE_IGNORE_NEW_LINES);
         $lines = array_combine($files, $files);
 
         $filesbin = file("bin/server.sh", FILE_IGNORE_NEW_LINES);
         $linesbin = array_combine($filesbin, $filesbin);
 
-        $io = $event->getIO();
+        $io = self::getEvent()->getIO();
         $io->write('==================================================');
         $io->write("Konfigurasi Base Url");
         $base_url = $io->ask("Base Url (127.0.0.1:8000) = ", '127.0.0.1:8000');
@@ -104,8 +231,20 @@ class Installer
         $io->write('==================================================');
 
     }
+
+    protected static function askRequired($pertanyaan) {
+        $io = self::getEvent()->getIO();
+        do {
+            $val = $io->ask($pertanyaan);
+            if (!$val) {
+                $io->write("Wajib diisi");
+            }
+        } while(!$val || trim($val)=="");
+        return $val;
+    }
+
     public static function successMessage(Event $event=null) {
-        $io = $event->getIO();
+        $io = self::getEvent()->getIO();
         $io->write('Install Success');
         $io->write('==================================================');
     }

@@ -145,7 +145,7 @@ class Installer
         do {
             $hostname = self::askRequired("Hostname = ");
             $username = self::askRequired("Username = ");
-            $password = self::askRequired("Password = ");
+            $password = $io->ask("Password = ");
             $database = self::askRequired("Database = ");
 
             self::$hostname = $hostname;
@@ -170,7 +170,13 @@ class Installer
         $io->write("Check Koneksi Database");
         $io->write(printf("Konfigurasi : %s | %s | %s | %s\n", self::$hostname, self::$username, self::$password, self::$database));
 
-        $mysqli = new \mysqli(self::getHostname(), self::getUsername(), self::getPassword(), self::getDatabase());
+        try {
+            $mysqli = new \mysqli(self::getHostname(), self::getUsername(), self::getPassword(), self::getDatabase());
+        } catch (\Exception $exception) {
+            $io->write(printf("<error>Koneksi gagal: %s\n</error>", $exception->getMessage()));
+            $io->write('==================================================');
+            return false;
+        }
 
         if ($mysqli->connect_errno) {
             $io->write(printf("<error>Koneksi gagal: %s\n</error>", $mysqli->connect_error));

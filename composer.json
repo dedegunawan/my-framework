@@ -1,0 +1,22 @@
+{
+	"description" : "Codeigniter Installer from kenjis/codeigniter-composer-installer",
+	"require": {
+		"php": ">=5.6",
+		"codeigniter/framework": "3.1.*",
+		"vlucas/phpdotenv": "^3.3",
+		"composer/composer": "^1.8"
+	},
+	"require-dev": {
+		"mikey179/vfsStream": "1.1.*"
+	},
+	"scripts": {
+		"post-root-package-install": [
+			"DedeGunawan\\MyFramework\\Installer::postInstall"
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"DedeGunawan\\MyFramework\\": "src//"
+		}
+	}
+}

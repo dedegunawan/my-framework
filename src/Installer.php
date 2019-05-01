@@ -16,6 +16,7 @@ class Installer
     protected static $username;
     protected static $password;
     protected static $database;
+    protected static $base_url;
     protected static $mysqli;
     protected static $event;
 
@@ -115,6 +116,24 @@ class Installer
         self::$database = $database;
     }
 
+    /**
+     * @return mixed
+     */
+    public static function getBaseUrl()
+    {
+        return self::$base_url;
+    }
+
+    /**
+     * @param mixed $base_url
+     */
+    public static function setBaseUrl($base_url)
+    {
+        self::$base_url = $base_url;
+    }
+
+
+
     public static function postInstall(Event $event=null) {
 
         self::setEvent($event);
@@ -128,7 +147,7 @@ class Installer
         self::header();
         self::successMessage();
 
-//        self::deleteSelf();
+        self::deleteSelf();
     }
 
     public static function header() {
@@ -236,15 +255,17 @@ class Installer
         $io = self::getEvent()->getIO();
         $io->write('==================================================');
         $io->write("Konfigurasi Base Url");
-        $base_url = $io->ask("Base Url (127.0.0.1:8000) = ", '127.0.0.1:8000');
+        $base_url = $io->ask("Base Url (default : 127.0.0.1:8000) = ");
+        if (!$base_url) $base_url = "127.0.0.1:8000";
+        self::setBaseUrl('http://'.$base_url);
 
         $lines['BASE_URL=your_base_url']= "BASE_URL=http://$base_url";
         file_put_contents(".env", implode("\n", $lines));
 
-        $linesbin['ADDR_PORT=${1:-127.0.0.1:8000}']= 'ADDR_PORT=${1:-'.$base_url.'}';
+        $linesbin['ADDR_PORT']= 'ADDR_PORT=${1:-'.$base_url.'}';
         file_put_contents("bin/server.sh", implode("\n", $linesbin));
 
-        $io->write("Done Config Base Url");
+        $io->write("<info>Done Config Base Url</info>");
         $io->write('==================================================');
 
     }
@@ -263,7 +284,9 @@ class Installer
     public static function successMessage() {
         $io = self::getEvent()->getIO();
         $io->write('Install Success');
-        $io->write('Silahkan jalankan web server menggunakan perintah : `./bin/server.sh`');
+        $io->write('1. `cd <codeigniter_project_folder>`');
+        $io->write('2. `./bin/server.sh`');
+        $io->write('3. Buka '.self::getBaseUrl().' di browser');
         $io->write('==================================================');
     }
 

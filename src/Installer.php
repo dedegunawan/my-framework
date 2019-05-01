@@ -17,7 +17,8 @@ class Installer
     protected static $password;
     protected static $database;
     public static function postInstall(Event $event=null) {
-        file_exists('.env') || copy('.env-example', '.env');
+        unlink('.env');
+        copy('.env-example', '.env');
         self::configDatabase($event);
         self::installIonAuth($event);
         self::configBaseUrl($event);
@@ -46,7 +47,7 @@ class Installer
         $lines["DATABASE_USERNAME=your_username"]= "DATABASE_USERNAME=$username";
         $lines["DATABASE_PASSWORD=your_password"]= "DATABASE_PASSWORD=$password";
 
-        file_put_contents(".env", implode("\n", $lines));
+        file_put_contents(".env", implode("", $lines));
         $io->write('==================================================');
 
     }

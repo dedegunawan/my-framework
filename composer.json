@@ -1,5 +1,12 @@
 {
-	"description" : "Codeigniter Installer from kenjis/codeigniter-composer-installer",
+	"name": "dedegunawan/document-converter-to-pdf",
+	"description" : "Framework saya sendiri, untuk digunakan sendiri. Codeigniter dengan berbagai costumisasi.",
+	"authors": [
+		{
+			"name": "Dede Gunawan",
+			"email": "dede@unsil.ac.id"
+		}
+	],
 	"require": {
 		"php": ">=5.6",
 		"codeigniter/framework": "3.1.*",

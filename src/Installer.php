@@ -36,7 +36,7 @@ class Installer
         $password = $io->ask("Password = ");
         $database = $io->ask("Database = ");
 
-        self::$database = $database;
+        self::$hostname = $hostname;
         self::$username = $username;
         self::$password = $password;
         self::$database = $database;
@@ -55,7 +55,7 @@ class Installer
         $io = $event->getIO();
         $io->write('==================================================');
         $io->write("Check Database Connection");
-        $io->write(printf("%s | %s | %s | %s", self::$hostname, self::$username, self::$password, self::$database));
+        $io->write(printf("Konfigurasi : %s | %s | %s | %s", self::$hostname, self::$username, self::$password, self::$database));
 
         $mysqli = new \mysqli(self::$hostname, self::$username, self::$password, self::$database);
 

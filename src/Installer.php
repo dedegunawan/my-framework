@@ -55,6 +55,7 @@ class Installer
         $io = $event->getIO();
         $io->write('==================================================');
         $io->write("Check Database Connection");
+        $io->write(printf("%s | %s | %s | %s", self::$hostname, self::$username, self::$password, self::$database));
 
         $mysqli = new \mysqli(self::$hostname, self::$username, self::$password, self::$database);
 

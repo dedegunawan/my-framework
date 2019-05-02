@@ -241,7 +241,6 @@ class Installer
     private static function deleteSelf()
     {
         unlink(__FILE__);
-        rmdir('src');
     }
 
 

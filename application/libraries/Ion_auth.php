@@ -76,7 +76,7 @@ class Ion_auth
 
 		if ($this->config->item('use_ci_email', 'ion_auth') && isset($email_config) && is_array($email_config))
 		{
-			$this->email->initialize($email_config);
+            $this->load_config_email();
 		}
 
 		$this->ion_auth_model->trigger_events('library_constructor');
@@ -149,6 +149,7 @@ class Ion_auth
 					'forgotten_password_code' => $user->forgotten_password_code
 				);
 
+
 				if (!$this->config->item('use_ci_email', 'ion_auth'))
 				{
 					$this->set_message('forgot_password_successful');
@@ -156,7 +157,11 @@ class Ion_auth
 				}
 				else
 				{
+
 					$message = $this->load->view($this->config->item('email_templates', 'ion_auth') . $this->config->item('email_forgot_password', 'ion_auth'), $data, TRUE);
+
+
+
 					$this->email->clear();
 					$this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 					$this->email->to($user->email);
@@ -187,6 +192,11 @@ class Ion_auth
 			return FALSE;
 		}
 	}
+
+	public function load_config_email() {
+        $this->email->initialize($this->config->item('email_config', 'ion_auth'));
+        $this->email->set_newline("\r\n");
+    }
 
 	/**
 	 * forgotten_password_complete

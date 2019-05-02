@@ -93,8 +93,8 @@ $config['salt_prefix']    = version_compare(PHP_VERSION, '5.3.7', '<') ? '$2a$' 
  | The controller should check this function and act
  | appropriately. If this variable set to 0, there is no maximum.
  */
-$config['site_title']                 = "Example.com";       // Site Title, example.com
-$config['admin_email']                = "admin@example.com"; // Admin Email, admin@example.com
+$config['site_title']                 = getenv('ION_AUTH_SITE_TITLE');       // Site Title, example.com
+$config['admin_email']                = getenv('EMAIL_ADMIN_EMAIL'); // Admin Email, admin@example.com
 $config['default_group']              = 'members';           // Default group, use name
 $config['admin_group']                = 'admin';             // Default administrators group, use name
 $config['identity']                   = 'email';             // You can use any unique column in your table as identity column. The values in this column, alongside password, will be used for login purposes
@@ -114,7 +114,8 @@ $config['forgot_password_expiration'] = 0;                   // The number of se
 $config['recheck_timer']              = 0;                   /* The number of seconds after which the session is checked again against database to see if the user still exists and is active.
 																Leave 0 if you don't want session recheck. if you really think you need to recheck the session against database, we would
 																recommend a higher value, as this would affect performance */
-
+$config['redirect_login'] = '/dashboard/';
+$config['redirect_not_login'] = '/auth/login';
 /*
  | -------------------------------------------------------------------------
  | Cookie options.
@@ -133,10 +134,23 @@ $config['identity_cookie_name'] = 'identity';
  | 	  'file' = Use the default CI config or use from a config file
  | 	  array  = Manually set your email config settings
  */
-$config['use_ci_email'] = FALSE; // Send Email using the builtin CI email class, if false it will return the code and the identity
-$config['email_config'] = array(
-	'mailtype' => 'html',
-);
+if (getenv('SMTP_HOST') == 'your_host') {
+    $config['use_ci_email'] = FALSE;
+    $config['email_config'] = array(
+        'mailtype' => 'html'
+    );
+} else {
+    $config['use_ci_email'] = TRUE; // Send Email using the builtin CI email class, if false it will return the code and the identity
+    $config['email_config'] = array(
+        'mailtype' => 'html',
+        'protocol' => 'smtp',
+        'smtp_host' => getenv('SMTP_HOST'),
+        'smtp_port' => getenv('SMTP_PORT'),
+        'smtp_timeout' => '5',
+        'smtp_user' => getenv('SMTP_USER'),
+        'smtp_pass' => getenv('SMTP_PASS'),
+    );
+}
 
 /*
  | -------------------------------------------------------------------------
@@ -145,7 +159,7 @@ $config['email_config'] = array(
  | Folder where email templates are stored.
  | Default: auth/
  */
-$config['email_templates'] = 'auth/email/';
+$config['email_templates'] = 'email/';
 
 /*
  | -------------------------------------------------------------------------

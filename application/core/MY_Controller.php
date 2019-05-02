@@ -16,6 +16,9 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
         $this->setDatas(array());
+        $this->load->config('ion_auth');
+        $this->redirect_login=$this->config->item('redirect_login', 'ion_auth');
+        $this->redirect_not_login=$this->config->item('redirect_not_login', 'ion_auth');
     }
 
     public function render($view_name, $template='default') {

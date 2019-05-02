@@ -142,6 +142,7 @@ class Installer
 
         self::configDatabase();
         self::installIonAuth();
+        self::installMenuStructure();
         self::header();
         self::configBaseUrl();
         self::header();
@@ -156,8 +157,12 @@ class Installer
     }
 
     public static function clearEnv() {
+
         file_exists('.env') && unlink('.env');
         copy('.env-example', '.env');
+
+        file_exists('bin/server.sh') && unlink('bin/server.sh');
+        copy('bin/server.sh-example', 'bin/server.sh');
     }
 
     public static function configDatabase() {
@@ -231,10 +236,21 @@ class Installer
         $io = self::getEvent()->getIO();
         $io->write('==================================================');
 
-        $sqlSource = file_get_contents('application/sql/ion_auth.sql');
+        $sqlSource = file_get_contents('application/sql/01-export.sql');
 
         self::getMysqli()->multi_query($sqlSource);
-        $io->write("Done Import Query");
+        $io->write("Done Import Query Ion Auth");
+        $io->write('==================================================');
+    }
+
+    public static function installMenuStructure() {
+        $io = self::getEvent()->getIO();
+        $io->write('==================================================');
+
+        $sqlSource = file_get_contents('application/sql/02-export.sql');
+
+        self::getMysqli()->multi_query($sqlSource);
+        $io->write("Done Import Query Menu Structure");
         $io->write('==================================================');
     }
 

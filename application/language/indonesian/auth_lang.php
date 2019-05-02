@@ -24,9 +24,9 @@ $lang['error_csrf'] = 'Form yang dikirim tidak lulus pemeriksaan keamanan kami.'
 // Login
 $lang['login_heading']         = 'Login';
 $lang['login_subheading']      = 'Silakan login dengan email/username dan password anda.';
-$lang['login_identity_label']  = 'Email/Username:';
-$lang['login_password_label']  = 'Kata Sandi:';
-$lang['login_remember_label']  = 'Ingatkan Saya:';
+$lang['login_identity_label']  = 'Email/Username';
+$lang['login_password_label']  = 'Kata Sandi';
+$lang['login_remember_label']  = 'Ingat Saya';
 $lang['login_submit_btn']      = 'Login';
 $lang['login_forgot_password'] = 'Lupa Kata Sandi?';
 
@@ -134,8 +134,8 @@ $lang['forgot_password_submit_btn']              = 'Kirim';
 $lang['forgot_password_validation_email_label']  = 'Alamat Email';
 $lang['forgot_password_username_identity_label'] = 'Nama Pengguna';
 $lang['forgot_password_email_identity_label']    = 'Email';
-$lang['forgot_password_email_not_found']         = 'Tidak ada data dari email tersebut.';
-$lang['forgot_password_identity_not_found']      = 'Tidak ada data dari nama pengguna tersebut.';
+$lang['forgot_password_email_not_found']         = 'Email tidak ditemukan.';
+$lang['forgot_password_identity_not_found']      = 'Username tidak ditemukan.';
 
 // Reset Password
 $lang['reset_password_heading']                               = 'Ganti Kata Sandi';

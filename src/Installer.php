@@ -163,6 +163,7 @@ class Installer
 
         file_exists('bin/server.sh') && unlink('bin/server.sh');
         copy('bin/server.sh-example', 'bin/server.sh');
+        chmod('bin/server.sh', 0755);
     }
 
     public static function configDatabase() {

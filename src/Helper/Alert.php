@@ -35,19 +35,19 @@ class Alert
 
     public static function success($messages) {
         self::init();
-        self::getCi()->session->set_flashdata('type', 'success');
+        self::getCi()->session->set_flashdata('alert_type', 'success');
         self::getCi()->session->set_flashdata('message', $messages);
     }
 
     public static function error($messages) {
         self::init();
-        self::getCi()->session->set_flashdata('type', 'danger');
+        self::getCi()->session->set_flashdata('alert_type', 'danger');
         self::getCi()->session->set_flashdata('message', $messages);
     }
 
     public static function info($messages) {
         self::init();
-        self::getCi()->session->set_flashdata('type', 'info');
+        self::getCi()->session->set_flashdata('alert_type', 'info');
         self::getCi()->session->set_flashdata('message', $messages);
     }
 

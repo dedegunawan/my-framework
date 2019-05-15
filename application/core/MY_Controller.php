@@ -12,6 +12,24 @@ class MY_Controller extends CI_Controller
     protected $redirect_login='/auth/';
     protected $redirect_not_login='/auth/login';
     protected $groups=array();
+    protected static $template_default;
+
+    /**
+     * @return mixed
+     */
+    public static function getTemplateDefault()
+    {
+        return self::$template_default;
+    }
+
+    /**
+     * @param mixed $template_default
+     */
+    public static function setTemplateDefault($template_default)
+    {
+        self::$template_default = $template_default;
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -19,14 +37,18 @@ class MY_Controller extends CI_Controller
         $this->load->config('ion_auth');
         $this->redirect_login=$this->config->item('redirect_login', 'ion_auth');
         $this->redirect_not_login=$this->config->item('redirect_not_login', 'ion_auth');
+
+        if (!self::getTemplateDefault()) self::setTemplateDefault('default');
     }
 
-    public function render($view_name, $template='default') {
+    public function render($view_name, $template=FALSE, $return=FALSE) {
 
-        if (is_null($template)) return $this->load->view($view_name, $this->getDatas());
+        if (is_null($template)) return $this->load->view($view_name, $this->getDatas(), $return);
+
+        if (!$template) $template = self::$template_default;
 
         $this->addData('content', $this->load->view($view_name, $this->getDatas(), true));
-        return $this->load->view("template/$template/$template", $this->getDatas());
+        return $this->load->view("template/$template/$template", $this->getDatas(), $return);
     }
 
     public function is_login() {
@@ -88,6 +110,15 @@ class MY_Controller extends CI_Controller
     public function addData($key, $data)
     {
         $this->datas[$key] = $data;
+    }
+    /**
+     * @param array $datas
+     */
+    public function addMultipleData($datas)
+    {
+        foreach ($datas as $key => $data) {
+            $this->datas[$key] = $data;
+        }
     }
     /**
      * @param mixed $key

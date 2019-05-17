@@ -38,7 +38,7 @@ class Menus extends \DedeGunawan\MyFramework\CoreController\SuperAdminController
         $this->form_validation->set_rules('lokasi', 'Lokasi Menu', 'required');
         $this->form_validation->set_rules('nama_menu', 'Nama Menu', 'required');
         $this->form_validation->set_rules('url', 'URL', 'required');
-        $this->form_validation->set_rules('groups', 'Group', 'required|callback_check_groups');
+        $this->form_validation->set_rules('groups', 'Group', 'callback_check_groups');
 
         if ($this->form_validation->run() === FALSE) {
             // display the form

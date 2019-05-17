@@ -59,7 +59,6 @@ class Menu_model extends CI_Model
 
     public function create_new_menu_with_new_location() {
         $groups = (array) $this->input->post('groups');
-        var_dump($groups);die();
         $this->db->insert('menus', array(
             'lokasi' => $this->input->post('lokasi'),
             'nama_menu' => $this->input->post('nama_menu'),

@@ -34,3 +34,11 @@ if (!function_exists('getUserIP')) {
         return $ip;
     }
 }
+
+
+// url check
+if (!function_exists('is_http')) {
+    function is_http($url) {
+        return substr(strtolower($url), 0, 4)=='http';
+    }
+}
